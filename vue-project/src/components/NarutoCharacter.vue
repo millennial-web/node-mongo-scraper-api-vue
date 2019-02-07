@@ -4,6 +4,12 @@
       <img class="char-thumbnail" :src="charData.thumbnail">
       <div class="character-info">
         <h1 @click="fetchCharData">{{charData.name}}</h1>
+        <div v-show="charData.quotes.length" class="quotes-container">
+          <characters-quotes v-show="charData.quotes.length">
+            <h2>Character Quotes</h2>
+            <p>"{{charData.quotes[quoteIndex]}}"</p>
+          </characters-quotes>
+        </div>
         <div>
           <span
             class="tab"
@@ -54,6 +60,7 @@
 </template>
 
 <script>
+import {eventBus} from '../main';
 export default {
   name: 'naruto-character',
   data: function(){
@@ -70,6 +77,7 @@ export default {
         "trivia": "",
         "_id": "",
         "name": "",
+        "quotes" : []
       },
       tabs: [
         {label: 'Summary', attrib: 'summary'},
@@ -82,6 +90,7 @@ export default {
         {label: 'Trivia', attrib: 'trivia'},
       ],
       selectedTab: 'Summary',
+      quoteIndex:0,
     }
   },
   methods:{
@@ -98,11 +107,20 @@ export default {
   beforeMount(){
     this.fetchCharData('5c59312db6918f5dc97e8822');
   },
-  mounted(){
-    this.$root.$on('changeCharacter', (dt) => {
+  created(){
+    eventBus.$on('changeCharacter', (dt) => {
         this.fetchCharData(dt.id);
         this.selectedTab = 'Summary';
+        this.quoteIndex = 0;
     });
+    setInterval(()=>{
+      let next_index = this.quoteIndex+1;
+      if(next_index < (this.charData.quotes.length -1)){
+        this.quoteIndex++;
+      }else{
+        this.quoteIndex = 0;
+      }
+    },7000);
   }
 }
 </script>
@@ -165,5 +183,13 @@ export default {
     margin:20px auto;
     background-color:#dce6ff;
     text-align:left;
+  }
+  .quotes-container{
+    display:inline-block;
+    background-color:#fff;
+    border:1px solid #ccc;
+    width:90%;
+    min-height:50px;
+    margin:0 auto 20px auto;
   }
 </style>

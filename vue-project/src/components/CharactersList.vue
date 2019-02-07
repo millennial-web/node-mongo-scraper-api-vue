@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import {eventBus} from '../main';
 export default {
   name: 'characters-list',
   data: function(){
@@ -26,7 +27,8 @@ export default {
         });
     },
     changeCharacter(charId){
-      this.$root.$emit('changeCharacter',{id:charId});
+      // this.$root.$emit('changeCharacter',{id:charId});
+      eventBus.$emit('changeCharacter',{id:charId});
     }
   },
   beforeMount(){

@@ -26,6 +26,7 @@ const parseCharData = async (char_html) => {
   let part_i = await genCharacterSection('Part_I',char_html);
   let part_ii = await genCharacterSection('Part_II',char_html);
   let trivia = await genCharacterSection('Trivia',char_html);
+  let quotes = await genCharacterSection('Quotes',char_html);
   let char_data = {
     name : $('.page-header__title', char_html).text(),
     thumbnail : $('.infobox .imagecell .image-thumbnail img',char_html).data('src'),
@@ -37,6 +38,7 @@ const parseCharData = async (char_html) => {
     part_i : part_i,
     part_ii : part_ii,
     trivia : trivia,
+    quotes : quotes,
   };
   return char_data;
 }
@@ -57,6 +59,7 @@ const updateOrCreateChar = async (character_data) => {
     ex_char.part_i = character_data.part_i;
     ex_char.part_ii = character_data.part_ii;
     ex_char.trivia = character_data.trivia;
+    ex_char.quotes = character_data.quotes;
     try{
       var result = await ex_char.save();
       console.log('updated existing character '+character_data.name+'...');
@@ -81,17 +84,28 @@ const updateOrCreateChar = async (character_data) => {
 }
 
 const genCharacterSection = async (section_id,html) => {
-  content = '';
-  $('h2 #'+section_id, html).parent().nextUntil('h2 .mw-headline').each((i,elm)=>{
-    if(elm.name == 'p'){
-      content += $(elm).text();
-    }
-    if(elm.name == 'ul'){
-      $(elm).children().each((i,li)=>{
-        content += $(li).text();
-      });
-    }
-  });
+  content = '';//most take a string
+  if(section_id == 'Quotes'){
+    content = [];//quotes should be an array of strings
+    $('h2 #'+section_id, html).parent().nextUntil('h2 .mw-headline').each((i,elm)=>{
+      if(elm.name == 'ul'){
+        $(elm).children().each((i,li)=>{
+          content.push( $(li).text() );
+        });
+      }
+    });
+  }else{
+    $('h2 #'+section_id, html).parent().nextUntil('h2 .mw-headline').each((i,elm)=>{
+      if(elm.name == 'p'){
+        content += $(elm).text();
+      }
+      if(elm.name == 'ul'){
+        $(elm).children().each((i,li)=>{
+          content += $(li).text();
+        });
+      }
+    });
+  }
   return content;
 }
 
@@ -168,8 +182,9 @@ router.get('/test-scrape-character-page/', (req, res) => {
         part_i : await genCharacterSection('Part_I',html),
         part_ii : await genCharacterSection('Part_II',html),
         trivia : await genCharacterSection('Trivia',html),
+        quotes : await genCharacterSection('Quotes',html),
       };
-      res.send(character_data);
+      res.send(character_data.quotes);
     })
     .catch(function(err){
       console.log('could not load url: '+target_url,err);

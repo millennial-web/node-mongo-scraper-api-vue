@@ -14,6 +14,7 @@ const characterSchema = new mongoose.Schema({
   part_i : {type: String, default : null},
   part_ii : {type: String, default : null},
   trivia : {type: String, default : null},
+  quotes : {type: Array, default : null},
   lastUpdated: {type: Date, default: Date.now},
 });
 characterSchema.plugin(uniqueValidator);//patch so that unique errors are handled just like any other validation error
@@ -33,7 +34,8 @@ const validateCharacter = (characterObj) =>{
     part_i: [Joi.string().optional(), Joi.allow(null)],
     part_ii: [Joi.string().optional(), Joi.allow(null)],
     trivia: [Joi.string().optional(), Joi.allow(null)],
-    abilities: [Joi.string().optional(), Joi.allow(null)]
+    abilities: [Joi.string().optional(), Joi.allow(null)],
+    quotes: [Joi.string().optional(), Joi.allow(null)]
   }
   return Joi.validate(characterObj,schema);
 }
