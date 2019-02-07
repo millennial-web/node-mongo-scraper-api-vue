@@ -13,8 +13,9 @@
 
 <style scoped>
   div{
-    padding:30px;
+    padding:10px;
     margin: 10px auto;
+    min-height:100px;
   }
   h2{
     color:#888;

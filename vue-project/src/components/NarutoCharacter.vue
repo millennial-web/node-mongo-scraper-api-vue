@@ -7,7 +7,9 @@
         <div v-show="charData.quotes.length" class="quotes-container">
           <characters-quotes v-show="charData.quotes.length">
             <h2>Character Quotes</h2>
-            <p>"{{charData.quotes[quoteIndex]}}"</p>
+            <transition v-for="(n,i) in charData.quotes" key="quote_trans_{{i}}" name="fade">
+              <p v-show="quoteIndex == i">"{{charData.quotes[i]}}"</p>
+            </transition>
           </characters-quotes>
         </div>
         <div>
@@ -120,7 +122,7 @@ export default {
       }else{
         this.quoteIndex = 0;
       }
-    },7000);
+    },3000);
   }
 }
 </script>
@@ -191,5 +193,19 @@ export default {
     width:90%;
     min-height:50px;
     margin:0 auto 20px auto;
+  }
+  .fade-enter{
+    opacity:0;
+    margin-top:-40px;
+  }
+  .fade-enter-active{
+    margin-top:0;
+    transition:opacity 2s;
+  }
+  .fade-leave{
+
+  }
+  .fade-leave-active {
+
   }
 </style>
