@@ -1,0 +1,7 @@
+{
+  "name" : "Naruto App - Development",
+  "db" : {
+    "host" : "//localhost:27017",
+    "dbname" : "naruto_characters"
+  }
+}

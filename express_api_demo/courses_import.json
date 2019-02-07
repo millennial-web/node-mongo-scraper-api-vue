@@ -1,0 +1,6 @@
+[
+  {"tags":["node","backend"],"name":"Node.js Course","author":"Mike Soto","isPublished":true,"date":"2019-02-03T05:27:56.294Z","__v":0,"price":100},
+  {"tags":["angular","frontend"],"name":"Angular Course","author":"Mike Soto","isPublished":true,"date":"2019-02-03T05:28:44.667Z","__v":0,"price":250},
+  {"tags":["react","frontend"],"name":"React Course","author":"Mike Soto","isPublished":true,"date":"2019-02-03T05:27:56.294Z","__v":0,"price":300},
+  {"tags":["mongodb","backend"],"name":"MongoDb Course","author":"Mike Soto","isPublished":false,"date":"2019-02-03T05:27:56.294Z","__v":0,"price":400}
+]

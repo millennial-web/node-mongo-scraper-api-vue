@@ -1,0 +1,26 @@
+{
+  "name": "express_api_demo",
+  "version": "1.0.0",
+  "description": "rest api in express over node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "config": "^3.0.1",
+    "debug": "^4.1.1",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "joi": "^14.3.1",
+    "mongoose": "^5.4.9",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "pug": "^2.0.3",
+    "puppeteer": "^1.12.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
+}
