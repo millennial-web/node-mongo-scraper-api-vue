@@ -58,7 +58,7 @@ h3{
   display:block;
   color:#fff;
   text-decoration:none;
-  width:100%;
+  max-width:100%;
   padding:8px 0 8px 10px;
   border-bottom:1px solid #444;
 }
