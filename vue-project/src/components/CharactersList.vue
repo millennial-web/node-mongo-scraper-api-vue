@@ -1,7 +1,8 @@
 <template>
   <div class="characters_list">
     <h3>Select a Character</h3>
-    <a v-for="char in charList" class="character-link" href="#" @click="changeCharacter(char._id)">
+    <a href="#" class="new-character-link" @click="switchMainComponent('newchar-form')">Create New Character</a>
+    <a href="#" class="character-link" v-for="char in charList" @click="changeCharacter(char._id)">
       {{char.name}}
     </a>
   </div>
@@ -27,13 +28,23 @@ export default {
         });
     },
     changeCharacter(charId){
-      // this.$root.$emit('changeCharacter',{id:charId});
+      console.log('emitting event changeCharacter',charId);
       eventBus.$emit('changeCharacter',{id:charId});
+    },
+    switchMainComponent(componentName){
+      console.log('emitting event switchMainComponent',componentName);
+      eventBus.$emit('switchMainComponent',componentName);
     }
   },
   beforeMount(){
     this.fetchCharList();
   },
+  created(){
+    eventBus.$on('refreshCharList',() => {
+      console.log('Receiving event refreshCharList');
+      this.fetchCharList();
+    });
+  }
 }
 </script>
 
@@ -41,6 +52,9 @@ export default {
 h3{
   color:#efefef;
   text-align:center;
+  font-size:18px;
+  margin-top:20px;
+  color:#ccc;
 }
 .characters_list{
   float:left;
@@ -64,5 +78,8 @@ h3{
 }
 .characters_list a:hover{
   background-color:#666;
+}
+a.new-character-link{
+  color:#96e5ff;
 }
 </style>

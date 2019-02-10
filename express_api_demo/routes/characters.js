@@ -35,30 +35,21 @@ router.post('/', async (request,response) => {
   //validate new character data
   let {error} = validateCharacter(request.body);
   if(error) return response.status(400).send(error);
-
   //create new character object
-  let new_character = new Character({
-    name: request.body.name,
-    image_url : request.body.image_url,
-    summary : request.body.summary,
-    background : request.body.background,
-    personality : request.body.personality,
-    appearance : request.body.appearance,
-    abilities : request.body.abilities,
-    lastUpdated : Date.now()
-  });
+  let new_character = new Character(request.body);
+  new_character.lastUpdated = Date.now();
   //save to database
   result = await new_character.save()
     .then(
       (result) => {
-        response.send(result);
+        return response.status(200).send(result);
       },
       (ex) => {
         let result = [];
         for (field in ex.errors){
           result.push(ex.errors[field].message);
         }
-        response.send(result);
+        return response.status(400).send(result);
       }
     );
 });

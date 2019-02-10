@@ -19,26 +19,19 @@ const getNextPage = async (html) =>{
 
 const parseCharData = async (char_html) => {
   //get character name from dom elements
-  let background = await genCharacterSection('Background',char_html);
-  let personality = await genCharacterSection('Personality',char_html);
-  let appearance = await genCharacterSection('Appearance',char_html);
-  let abilities = await genCharacterSection('Abilities',char_html);
-  let part_i = await genCharacterSection('Part_I',char_html);
-  let part_ii = await genCharacterSection('Part_II',char_html);
-  let trivia = await genCharacterSection('Trivia',char_html);
-  let quotes = await genCharacterSection('Quotes',char_html);
   let char_data = {
     name : $('.page-header__title', char_html).text(),
+    gender: await getCharTableData('Gender',char_html),
     thumbnail : $('.infobox .imagecell .image-thumbnail img',char_html).data('src'),
     summary : $('.infobox',char_html).next().text(),
-    background : background,
-    personality : personality,
-    appearance : appearance,
-    abilities : abilities,
-    part_i : part_i,
-    part_ii : part_ii,
-    trivia : trivia,
-    quotes : quotes,
+    background : await genCharacterSection('Background',char_html),
+    personality : await genCharacterSection('Personality',char_html),
+    appearance : await genCharacterSection('Appearance',char_html),
+    abilities : await genCharacterSection('Abilities',char_html),
+    part_i : await genCharacterSection('Part_I',char_html),
+    part_ii : await genCharacterSection('Part_II',char_html),
+    trivia : await genCharacterSection('Trivia',char_html),
+    quotes : await genCharacterSection('Quotes',char_html),
   };
   return char_data;
 }
@@ -50,6 +43,7 @@ const updateOrCreateChar = async (character_data) => {
   if(existing_char.length){
     ex_char = existing_char[0];
     ex_char.name = character_data.name;
+    ex_char.gender = character_data.gender;
     ex_char.thumbnail = character_data.thumbnail;
     ex_char.summary = character_data.summary;
     ex_char.background = character_data.background;
@@ -85,8 +79,8 @@ const updateOrCreateChar = async (character_data) => {
 
 const genCharacterSection = async (section_id,html) => {
   content = '';//most take a string
-  if(section_id == 'Quotes'){
-    content = [];//quotes should be an array of strings
+  if(section_id == 'Quotes' || section_id == 'Trivia' ){
+    content = [];// should be an array of strings
     $('h2 #'+section_id, html).parent().nextUntil('h2 .mw-headline').each((i,elm)=>{
       if(elm.name == 'ul'){
         $(elm).children().each((i,li)=>{
@@ -106,6 +100,18 @@ const genCharacterSection = async (section_id,html) => {
       }
     });
   }
+  return content;
+}
+
+const getCharTableData = async (th_label,html) => {
+  content = '';
+  $('.infobox tr',html).each((index,el)=>{
+    var $el = $(el);
+    var th = $el.find('th');
+    if(th.text().trim() == th_label){
+      content = $(th).next().text();
+    }
+  });
   return content;
 }
 
@@ -174,6 +180,7 @@ router.get('/test-scrape-character-page/', (req, res) => {
       let character_data = {
         name : $('.page-header__title', html).text(),
         thumbnail : $('.infobox .imagecell .image-thumbnail img',html).data('src'),
+        gender: await getCharTableData('Gender',html),
         summary : $('.infobox',html).next().text(),
         background : await genCharacterSection('Background',html),
         personality : await genCharacterSection('Personality',html),
@@ -184,7 +191,8 @@ router.get('/test-scrape-character-page/', (req, res) => {
         trivia : await genCharacterSection('Trivia',html),
         quotes : await genCharacterSection('Quotes',html),
       };
-      res.send(character_data.quotes);
+      console.log(character_data);
+      res.send('ok');
     })
     .catch(function(err){
       console.log('could not load url: '+target_url,err);

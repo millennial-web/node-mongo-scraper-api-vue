@@ -4,20 +4,32 @@
       <div v-show="charData" class="character-card">
         <img class="char-thumbnail" :src="charData.thumbnail">
         <div class="character-info">
-          <h1 @click="fetchCharData">{{charData.name}}</h1>
-          <div v-show="charData && charData.quotes.length" class="quotes-container">
-            <characters-quotes v-show="charData && charData.quotes.length">
+          <div class="char-personal-info">
+            <h1>{{charData.name}}</h1>
+            <ul>
+              <li v-html="charData.gender" class="char_gender">
+              </li>
+            </ul>
+          </div>
+          <div v-show="charData.quotes && charData.quotes.length" class="quotes-container">
+            <characters-quotes v-show="charData.quotes && charData.quotes.length">
               <h2>Character Quotes</h2>
               <transition v-for="(n,i) in charData.quotes" key="quote_trans_{{i}}" name="fade">
-                <p v-show="quoteIndex == i">"{{charData.quotes[i]}}"</p>
+                <p v-show="quoteIndex == i">"{{n}}"</p>
               </transition>
+              <div
+                class="quote-dot"
+                :class="{active: quoteIndex == i}"
+                v-for="(n,i) in charData.quotes"
+                @click="resetLoopQuotes(i)">
+                {{i+1}}</div>
             </characters-quotes>
           </div>
           <div>
             <span
               class="tab"
               v-for="tab in tabs"
-              v-show="charData[tab.attrib]"
+              v-show="charData[tab.attrib] && charData[tab.attrib].length"
               :class="{activeTab: selectedTab === tab.label}"
               @click="selectedTab = tab.label"
               >
@@ -52,9 +64,13 @@
               <h2>Part II</h2>
               <p>{{charData.part_ii}}</p>
             </div>
-            <div class="char_detail_pane" v-show="charData.trivia && selectedTab == 'Trivia'">
+            <div class="char_detail_pane" v-show="charData.trivia && charData.trivia.length && selectedTab == 'Trivia'">
               <h2>Trivia</h2>
-              <p>{{charData.trivia}}</p>
+              <ul class="char-trivia">
+                <li v-for="triv in charData.trivia">
+                  {{triv}}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -94,6 +110,21 @@ export default {
         .then(char_data => {
           this.charData = char_data;
         });
+    },
+    setLoopQuotesInterval(){
+      this.loopQuotes = setInterval(()=>{
+        let next_index = this.quoteIndex+1;
+        if(next_index < (this.charData.quotes.length -1)){
+          this.quoteIndex++;
+        }else{
+          this.quoteIndex = 0;
+        }
+      },5000);
+    },
+    resetLoopQuotes(newindex){
+      clearInterval(this.loopQuotes);
+      this.quoteIndex = newindex;
+      this.setLoopQuotesInterval();
     }
   },
   beforeMount(){
@@ -105,14 +136,7 @@ export default {
         this.selectedTab = 'Summary';
         this.quoteIndex = 0;
     });
-    setInterval(()=>{
-      let next_index = this.quoteIndex+1;
-      if(next_index < (this.charData.quotes.length -1)){
-        this.quoteIndex++;
-      }else{
-        this.quoteIndex = 0;
-      }
-    },5000);
+    this.setLoopQuotesInterval();
   }
 }
 </script>
@@ -121,18 +145,53 @@ export default {
 <style scoped>
   .selected_character{
     float:left;
-    width:70%;
+    width:75%;
+  }
+  div.quote-dot{
+    display:inline-block;
+    width:20px;
+    width:20px;
+    min-height:0;
+    height:0;
+    padding:4px 5px 16px 5px;
+    text-align:center;
+    font-size:10px;
+    color:#fff;
+    margin:0 5px 0 0;
+    border-radius:10px;
+    background-color:#999;
+    box-shadow:1px 2px 3px #555;
+  }
+  div.quote-dot:hover{
+    cursor:pointer;
+    background-color:#ccc;
+  }
+  div.quote-dot.active{
+    background-color:#444;
   }
   .character-card{
     width:100%;
+    height:100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
   }
   h1, h2 {
     font-weight: normal;
-    margin:0 0 20px 0;
+    margin:0;
+  }
+  .char-personal-info{
+    margin-bottom:20px;
   }
   ul {
     list-style-type: none;
     padding: 0;
+  }
+  ul.char-trivia{
+    list-style-type:circle;
+    padding:0 10px 0 20px;
+  }
+  ul.char-trivia li{
+    margin:5px 0;
   }
   .tab{
     border:1px solid #ccc;
@@ -144,7 +203,7 @@ export default {
     -moz-border-top-right-border-radius:5px;
     -webkit-border-top-right-border-radius:5px;
     padding:5px;
-    margin:6px;
+    margin:4px;
     background-color:#3f5252;
     color:#fff;
     font-size:12px;
@@ -172,17 +231,18 @@ export default {
     max-height:400px;
     overflow:auto;
     width:90%;
-    margin:20px auto;
+    margin:20px auto 200px auto;
     background-color:#dce6ff;
     text-align:left;
+  }
+  .char_detail_pane h2{
+    margin-bottom:20px;
   }
   .quotes-container{
     display:inline-block;
     background-color:#fff;
     border:1px solid #ccc;
     width:90%;
-    height:180px;
-    overflow:auto;
     margin:0 auto 20px auto;
   }
   .fade-enter{
