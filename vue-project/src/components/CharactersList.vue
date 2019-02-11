@@ -19,7 +19,7 @@ export default {
   },
   methods:{
     fetchCharList(){
-      this.$http.get('http://localhost:3000/api/characters/char_list')
+      this.$http.get('http://54.69.152.1:3000/api/characters/char_list')
         .then(response => {
           return response.json();
         })

@@ -4,6 +4,9 @@ const morgan = require('morgan');//logs http request info to console
 const helmet = require('helmet');//security headers lib
 const mongoose = require('mongoose');//wrapper for mongodb
 const express = require('express');//framework
+//custom modules
+const parser = require('./routes/parser');
+const characters = require('./routes/characters');
 const app = express();
 
 //development only modules
@@ -11,11 +14,6 @@ if(app.get('env') === 'development'){
   app.use(morgan('tiny'));
   console.log('In development, Morgan enabled...');
 }
-
-//custom modules
-const parser = require('./routes/parser');
-const characters = require('./routes/characters');
-
 
 // set view engine and directory
 app.set('view engine', 'pug');
@@ -32,13 +30,21 @@ app.use(function(req, res, next) {
   next();
 });
 
+//db options
+let dbOptions = {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  keepAlive: 1,
+  connectTimeoutMS: 30000
+};
+
 //set routers
 app.use('/api/characters',characters);
 app.use('/parser',parser);
 
 console.log(`Routers loaded for: ${config.get('name')}`);
 //connect to mongo db and start server
-mongoose.connect(`mongodb:${config.get('db.host')}/${config.get('db.dbname')}`, {useNewUrlParser: true})
+mongoose.connect(`${config.get('dbconnect')}`, dbOptions)
   .then(() => {
       console.log('Connected to MongoDb');
   })

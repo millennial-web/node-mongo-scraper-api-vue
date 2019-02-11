@@ -103,7 +103,7 @@ export default {
   methods:{
     fetchCharData(charId){
       this.charData = false;
-      this.$http.get('http://localhost:3000/api/characters/'+charId)
+      this.$http.get('http://54.69.152.1:3000/api/characters/'+charId)
         .then(response => {
           return response.json();
         })

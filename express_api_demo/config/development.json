@@ -1,7 +1,4 @@
 {
   "name" : "Naruto App - Development",
-  "db" : {
-    "host" : "//localhost:27017",
-    "dbname" : "naruto_characters"
-  }
+  "dbconnect" : "mongodb://localhost:27017/naruto_characters"
 }

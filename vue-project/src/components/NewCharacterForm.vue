@@ -260,7 +260,7 @@
         }else{
           this.newchar_data.trivia = [];
         }
-        this.$http.post('http://localhost:3000/api/characters/',this.newchar_data)
+        this.$http.post('http://54.69.152.1:3000/api/characters/',this.newchar_data)
           .then((response) => {
             if(response.status == 200){
               console.log(response);
