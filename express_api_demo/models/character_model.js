@@ -37,8 +37,7 @@ const validateCharacter = (characterObj) =>{
     part_ii: [Joi.string().optional(), Joi.allow(null)],
     abilities: [Joi.string().optional(), Joi.allow(null)],
     quotes: [Joi.array().optional(), Joi.allow(null)],
-    trivia: [Joi.array().optional(), Joi.allow(null)],
-
+    trivia: [Joi.array().optional(), Joi.allow(null)]
   }
   return Joi.validate(characterObj,schema);
 }

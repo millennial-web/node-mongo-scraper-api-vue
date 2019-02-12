@@ -28,3 +28,14 @@ $ cd /vue-project
 $ npm install
 $ npm run dev
 ```
+
+# To run Unit test on Express API:
+create mongo database "naruto_characters_test"
+import the test data from characters_test_export.json file in root of project.
+```sh
+mongoimport --db naruto_characters_test --collection characters --file characters_test_export.json
+```
+execute test with npm command:
+```sh
+npm test
+```
